@@ -119,3 +119,12 @@ edit "SYSACCESS-IPSEC"
     next
 end
 ```
+## forticlient configuration
+![image](https://github.com/user-attachments/assets/c36e7a0f-e306-4c8c-979d-bfc98e97edb2)
+
+![image](https://github.com/user-attachments/assets/b0420381-528b-4688-913f-af4eebd6be61)
+
+![image](https://github.com/user-attachments/assets/88a9fd98-d75a-491e-ad6b-cd292e659a35)
+
+![image](https://github.com/user-attachments/assets/5661267d-bc26-4a7c-8e16-eeafb682a675)
+
