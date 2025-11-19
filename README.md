@@ -79,7 +79,7 @@ end
 ``` 
 
 ### Full Configuration
-
+```shell
 config vpn ipsec phase1-interface
     edit "SYSACCESS-IPSEC"
         set interface "wan1"                
