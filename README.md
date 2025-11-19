@@ -9,8 +9,6 @@ This configuration sets up a remote access IPsec VPN on FortiGate using IKEv2, E
 
 * Mode-config with client IP pool
 
-* Split-tunnel access
-
 * Static route for client subnet
 
 ## 1. Phase 1 Interface Configuration
