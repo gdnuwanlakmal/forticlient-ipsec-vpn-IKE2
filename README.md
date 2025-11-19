@@ -37,8 +37,8 @@ config vpn ipsec phase1-interface
         set ipv4-end-ip   192.168.189.20
         set ipv4-netmask  255.255.255.0
         set dns-mode manual
-        set ipv4-dns-server1 172.20.0.10   
-        set ipv4-dns-server2 172.20.0.11
+        set ipv4-dns-server1 172.20.0.20   
+        set ipv4-dns-server2 172.20.0.21
         set dpd on-idle
 	    set localid "vpn-user"
         set nattraversal enable
@@ -101,8 +101,8 @@ config vpn ipsec phase1-interface
         set ipv4-end-ip   192.168.189.20
         set ipv4-netmask  255.255.255.0
         set dns-mode manual
-        set ipv4-dns-server1 172.20.0.10   
-        set ipv4-dns-server2 172.20.0.11
+        set ipv4-dns-server1 172.20.0.20   
+        set ipv4-dns-server2 172.20.0.21
         set dpd on-idle
 		set localid "vpn-user"
         set nattraversal enable
