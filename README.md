@@ -17,107 +17,111 @@ This configuration sets up a remote access IPsec VPN on FortiGate using IKEv2, E
 
 ```shell
 config vpn ipsec phase1-interface
-edit "SYSACCESS-IPSEC"
-    set type dynamic                        # VPN peer has dynamic IP
-    set interface "wan1"                    # Interface to listen for VPN connections
-    set ike-version 2                       # Using IKEv2 for key exchange
-    set peertype one                        # Accept connection from a single peer
-    set net-device disable                  # Disables creation of a separate virtual interface for remote subnet
-    set mode-cfg enable                     # Enable mode-config (client gets IP from FortiGate)
-    set ipv4-dns-server1 8.8.8.8            # DNS server assigned to clients
-    set proposal aes256-sha256              # Encryption and authentication proposal
-    set dhgrp 14                            # Diffie-Hellman Group 14 (2048-bit)
-    set eap enable                          # Enable EAP for authentication
-    set eap-identity send-request           # FortiGate sends EAP identity request to client
-    set authusrgrp "VPN-USER-GRP"           # Group containing allowed VPN users
-    set peerid "vpn-user"                   # Expected peer identity (can be matched with client ID)
-    set default-gw 192.168.186.1            # Default gateway for mode-config clients
-    set ipv4-start-ip 192.168.186.10        # Start IP for client pool
-    set ipv4-end-ip 192.168.186.20          # End IP for client pool
-    set ipv4-netmask 255.255.255.0          # Subnet mask assigned to clients
-    set ipv4-split-include "server_address" # Specifies split tunneling route (clients only access defined internal subnets)
-    set psksecret *********                 # Encrypted pre-shared key
-    set dpd-retryinterval 60                # Dead Peer Detection retry every 60 seconds
-next
+    edit "SYSACCESS-IPSEC"
+        set interface "wan1"                
+        set type dynamic                     
+        set ike-version 2
+        set peertype any
+        set mode-cfg enable                  
+        set net-device disable               
+        set add-route enable
+        set proposal aes256-sha256
+        set dhgrp 14                         
+        set keylife 28800
+        set authmethod psk
+        set psksecret **************   
+        set eap enable                       
+        set eap-identity send-request        
+        set authusrgrp ipsec_user_group     
+        set ipv4-start-ip 192.168.189.10        
+        set ipv4-end-ip   192.168.189.20
+        set ipv4-netmask  255.255.255.0
+        set dns-mode manual
+        set ipv4-dns-server1 172.20.0.10   
+        set ipv4-dns-server2 172.20.0.11
+        set dpd on-idle
+	    set localid "ikev2user"
+        set nattraversal enable
+        set comments "FortiClient IKEv2 remote access"
+    next
 end
 ```
 ## 2. Phase 2 Interface Configuration
+
 ```shell
 config vpn ipsec phase2-interface
-edit "SYSACCESS-IPSEC-P2"
-    set phase1name "SYSACCESS-IPSEC"       # Link Phase 2 to corresponding Phase 1
-    set proposal aes256-sha256             # Phase 2 encryption/auth proposal
-    set dhgrp 14                           # DH Group for Phase 2 (must match Phase 1)
-next
+    edit "SYSACCESS-IPSEC-P2"
+        set phase1name "SYSACCESS-IPSEC"
+        set proposal aes256-sha256
+        set pfs disable
+        set keylifeseconds 3600
+        set src-subnet 0.0.0.0 0.0.0.0
+        set dst-subnet 0.0.0.0 0.0.0.0
+    next
 end
 ```
-## 3. Tunnel Interface Definition
-```shell
-config system interface
-edit "SYSACCESS-IPSEC"
-    set ip 192.168.186.1 255.255.255.255    # Assign a /32 IP to the tunnel interface
-    set type tunnel                         # Marks this interface as a VPN tunnel
-next
-end
-```
-## 4. Firewall Policy for SYSACCESS-IPSEC VPN
+## 3. Firewall Policy for SYSACCESS-IPSEC VPN
 ```shell
 config firewall policy
 edit 1000
     set name "VPN_SYSACCESS_TO_INTERNAL"
-    set srcintf "SYSACCESS-IPSEC"                 # Tunnel interface
-    set dstintf "LAN"                             # Destination interface (e.g., internal network)
-    set srcaddr "all"                             # Or define a specific address group if needed
-    set dstaddr "server_Range"                    # Internal network/subnet
+    set srcintf "SYSACCESS-IPSEC"                  
+    set dstintf "LAN"                             
+    set srcaddr "all"                             
+    set dstaddr "server_Range"                    
     set action accept
     set schedule "always"
-    set service "ALL"                             # Or limit to specific services (HTTP, RDP, etc.)
-    set nat enable                                # Enable NAT if clients need internet access
-    set logtraffic all                            # Log all traffic for auditing
+    set service "ALL"                             
+    set nat enable                                
+    set logtraffic all                            
 next
 end
 ``` 
 
 ### Full Configuration
-```shell
+
 config vpn ipsec phase1-interface
-edit "SYSACCESS-IPSEC"
-        set type dynamic
-        set interface "wan1"
+    edit "SYSACCESS-IPSEC"
+        set interface "wan1"                
+        set type dynamic                     
         set ike-version 2
-        set peertype one
-        set net-device disable
-        set mode-cfg enable
-        set ipv4-dns-server1 8.8.8.8
+        set peertype any
+        set mode-cfg enable                  
+        set net-device disable               
+        set add-route enable
         set proposal aes256-sha256
-        set dhgrp 14
-        set eap enable
-        set eap-identity send-request
-        set authusrgrp "VPN-USER-GRP"
-        set peerid "vpn-user"
-        set default-gw 192.168.186.1
-        set ipv4-start-ip 192.168.186.10
-        set ipv4-end-ip 192.168.186.20
-        set ipv4-netmask 255.255.255.0
-        set ipv4-split-include "server_address"
-        set psksecret ***********
-        set dpd-retryinterval 60
+        set dhgrp 14                         
+        set keylife 28800
+        set authmethod psk
+        set psksecret **************   
+        set eap enable                       
+        set eap-identity send-request        
+        set authusrgrp ipsec_user_group     
+        set ipv4-start-ip 192.168.189.10        
+        set ipv4-end-ip   192.168.189.20
+        set ipv4-netmask  255.255.255.0
+        set dns-mode manual
+        set ipv4-dns-server1 172.20.0.10   
+        set ipv4-dns-server2 172.20.0.11
+        set dpd on-idle
+	set localid "ikev2user"
+        set nattraversal enable
+        set comments "FortiClient IKEv2 remote access"
     next
 end
+
 
 config vpn ipsec phase2-interface
-edit "SYSACCESS-IPSEC-P2"
+    edit "SYSACCESS-IPSEC-P2"
         set phase1name "SYSACCESS-IPSEC"
         set proposal aes256-sha256
-        set dhgrp 14
+        set pfs disable
+        set keylifeseconds 3600
+        set src-subnet 0.0.0.0 0.0.0.0
+        set dst-subnet 0.0.0.0 0.0.0.0
     next
 end
 
-config system interface
-edit "SYSACCESS-IPSEC"
-        set ip 192.168.186.1 255.255.255.255
-    next
-end
 ```
 ## forticlient configuration
 ![image](https://github.com/user-attachments/assets/c36e7a0f-e306-4c8c-979d-bfc98e97edb2)
