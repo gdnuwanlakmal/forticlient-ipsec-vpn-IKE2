@@ -104,7 +104,7 @@ config vpn ipsec phase1-interface
         set ipv4-dns-server1 172.20.0.10   
         set ipv4-dns-server2 172.20.0.11
         set dpd on-idle
-	set localid "ikev2user"
+		set localid "ikev2user"
         set nattraversal enable
         set comments "FortiClient IKEv2 remote access"
     next
