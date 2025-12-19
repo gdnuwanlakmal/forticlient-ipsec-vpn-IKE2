@@ -1,3 +1,11 @@
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/2717e193-16a6-4886-b904-aa4f038a5d08"
+    width="300"
+  />
+  <br />
+</p>
+
 # 🔐 FortiGate IPsec VPN Configuration - IKEv2 (Mode-Config with EAP Authentication)
 This configuration sets up a remote access IPsec VPN on FortiGate using IKEv2, EAP-based user authentication, and mode-config for dynamic IP assignment to clients. assigns IPs from the 192.168.189.10–20 range, and allows access only to internal networks defined in specific range.
 
